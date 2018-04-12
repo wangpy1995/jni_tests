@@ -13,7 +13,7 @@ extern "C" {
  * Method:    arrayCopy
  * Signature: (Ljava/lang/Object;ILjava/lang/Object;II)V
  */
-JNIEXPORT void JNICALL Java_test_ArrayOp_arrayCopy
+JNIEXPORT jobject JNICALL Java_test_ArrayOp_arrayCopy
   (JNIEnv *, jclass, jobject, jint, jobject, jint, jint);
 
 /*

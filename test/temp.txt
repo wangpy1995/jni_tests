@@ -1,0 +1,39 @@
+int sum256(const char *a, const char *b) {
+    __m256i sum = {0}; //ymm2
+
+    __m256i za, zb, zc;
+    __m128i za0 = _mm256_castsi256_si128(za); //xmm0
+    __m128i zb0 = _mm256_castsi256_si128(zb);//xmm3
+    __m128i zc0 = _mm256_castsi256_si128(zc);//xmm1
+
+    for (int i = 0; i < 512; i += 32) {
+        za = _mm256_load_si256((const __m256i *) (a + i)); //ymm0
+        zb = _mm256_cvtepi8_epi16((__m128i) (b + i)); //ymm3
+
+
+        zc = _mm256_cvtepi8_epi16(za0); //ymm1
+        za0 = _mm256_extracti128_si256(za, 0x1); //xmm0
+        zb = _mm256_mullo_epi16(zb, zc); //ymm3
+
+        zc = _mm256_cvtepi8_epi16(za0); //ymm1
+        za = _mm256_cvtepi8_epi16((__m128i) (b + i + 16)); //ymm0
+
+        za = _mm256_mullo_epi16(za, zc); //ymm0
+
+        zc = _mm256_cvtepi8_epi16(zb0);//ymm1
+        sum = _mm256_add_epi32(sum, zc); //ymm2
+
+
+        zc0 = _mm256_extracti128_si256(zb, 0x1); //xmm1
+        zc = _mm256_cvtepi8_epi16(zc0);//ymm1
+        sum = _mm256_add_epi32(zc, sum);//ymm2
+
+        zc = _mm256_cvtepi8_epi16(za0);//ymm1
+        zc0 = _mm256_extracti128_si256(za, 0x1);//xmm0
+        sum = _mm256_add_epi32(sum, zc);//ymm2
+        za = _mm256_cvtepi8_epi16(za0);
+        sum = _mm256_add_epi32(sum, zc);
+
+    }
+
+}
